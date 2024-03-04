@@ -1,10 +1,16 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const Header = () => {
+  //datオブジェクトをsessionで再定義
+  const { data: session } = useSession();
+  const user = session?.user;
+  console.log(user);
+
   return (
     <header className="bg-slate-600 text-gray-100 shadow-lg">
       <nav className="flex items-center justify-between p-4">
@@ -29,7 +35,8 @@ const Header = () => {
             <Image
               width="50"
               height="50"
-              src="/default_icon.png"
+              src={user?.image || "/default_icon.png"}
+              // src=""
               alt="profile_icon"
             />
           </Link>
