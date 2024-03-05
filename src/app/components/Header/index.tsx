@@ -6,7 +6,7 @@ import Link from "next/link";
 import React from "react";
 
 const Header = () => {
-  //datオブジェクトをsessionで再定義
+  //dataオブジェクトをsessionで再定義
   const { data: session } = useSession();
   const user = session?.user;
 

@@ -4,7 +4,7 @@ import GithubProvider from "next-auth/providers/github";
 import EmailProvider from "next-auth/providers/email";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import GoogleProvider from "next-auth/providers/google";
-import prisma from "./prisma";
+import prisma from "../prisma";
 
 export const nextAuthOptions: NextAuthOptions = {
   debug: false,
@@ -22,6 +22,9 @@ export const nextAuthOptions: NextAuthOptions = {
     //   from: process.env.EMAIL_FROM,
     // }),
   ],
+  session: {
+    maxAge: 30 * 24 * 60 * 60,
+  },
   adapter: PrismaAdapter(prisma),
   callbacks: {
     session: ({ session, user }) => {
