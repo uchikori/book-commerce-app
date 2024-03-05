@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -9,7 +9,6 @@ const Header = () => {
   //datオブジェクトをsessionで再定義
   const { data: session } = useSession();
   const user = session?.user;
-  console.log(user);
 
   return (
     <header className="bg-slate-600 text-gray-100 shadow-lg">
@@ -24,12 +23,24 @@ const Header = () => {
           >
             ホーム
           </Link>
+
           <Link
-            href="/login"
+            href={user ? "/profile" : "/login"}
             className="text-gray-300 hover:text-white px-3 py-2 rounded-md text^sm font-medium"
           >
-            ログイン
+            {user ? "マイページ" : "ログイン"}
           </Link>
+
+          {user ? (
+            <button
+              onClick={() => signOut()}
+              className="text-gray-300 hover:text-white px-3 py-2 rounded-md text^sm font-medium"
+            >
+              ログアウト
+            </button>
+          ) : (
+            ""
+          )}
 
           <Link href="/profile">
             <Image
