@@ -1,7 +1,6 @@
 import { getDetailBook } from "@/app/lib/microcms/client";
 import Image from "next/image";
 import React from "react";
-
 type DetailPageProps = {
   params: {
     id: string;
