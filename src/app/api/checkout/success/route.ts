@@ -11,7 +11,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
   try {
     //stripeのセッションIDを渡し、sessionオブジェクトを取得
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    console.log(session);
 
     //postgresのデータでuserIdとbookIdが一致するデータを取得（過去に一度購入している）
     const existingPurchase = await prisma.purchase.findFirst({
