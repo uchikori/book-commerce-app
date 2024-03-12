@@ -1,6 +1,6 @@
 //microCMSの記事情報の型
-type BookType = {
-  id: number;
+export type BookType = {
+  id: string;
   title: string;
   content: string;
   price: number;
@@ -8,4 +8,18 @@ type BookType = {
   createdAt: string;
   updatedAt: string;
 };
-export default BookType;
+
+export type User = {
+  id: string;
+  name?: string;
+  email?: string;
+  image?: string;
+};
+
+export type Purchase = {
+  id: string;
+  userId: string;
+  bookId: string;
+  createdAt: string;
+  user: User;
+};

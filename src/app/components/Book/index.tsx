@@ -1,6 +1,6 @@
 "use client";
 
-import BookType from "@/app/types/types";
+import { BookType } from "@/app/types/types";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,30 +9,38 @@ import { useState } from "react";
 
 type BookProps = {
   book: BookType;
+  isPurchased: boolean;
 };
 
 const Book = (props: BookProps) => {
-  const { book } = props;
+  const { book, isPurchased } = props;
 
   const router = useRouter();
 
   //セッションの取得(データオブジェクトをsessionとして受け取る)
   const { data: session } = useSession();
   //セッションオブジェクトが存在する場合のみuserを取得
-  const user = session?.user;
+  const user: any = session?.user;
 
   //モーダル開閉の状態変数
   const [showModal, setShowModal] = useState(false);
 
   //モダールの表示関数
   const handlePurchaseClick = () => {
-    setShowModal(true);
+    //購入済みの場合
+    if (isPurchased) {
+      //アラートを表示
+      alert("この本は購入済みです");
+    } else {
+      setShowModal(true);
+    }
   };
   //モーダルの非表示関数
   const handleCancel = () => {
     setShowModal(false);
   };
 
+  //StripeのcheckoutAPIを呼び出す
   const startCheckout = async () => {
     try {
       const response = await fetch(
@@ -45,15 +53,15 @@ const Book = (props: BookProps) => {
           body: JSON.stringify({
             title: book.title,
             price: book.price,
+            bookId: book.id,
+            userId: user?.id,
           }),
         }
       );
       const responseData = await response.json();
-
-      console.log(responseData);
-      console.log(responseData.checkout_url);
-
+      //レスポンスがある場合
       if (responseData) {
+        //StripeのチェックアウトセッションのURLにリダイレクト
         router.push(responseData.checkout_url);
       }
     } catch (err) {
@@ -95,14 +103,17 @@ const Book = (props: BookProps) => {
           onClick={handlePurchaseClick}
           className="cursor-pointer shadow-2xl duration-300 hover:translate-y-1 hover:shadow-none"
         >
-          <Image
-            priority
-            src={book.thumbnail.url}
-            alt={book.title}
-            width={450}
-            height={350}
-            className="rounded-t-md w-full object-cover"
-          />
+          <figure className="aspect-[16/9]">
+            <Image
+              priority
+              src={book.thumbnail.url}
+              alt={book.title}
+              width={450}
+              height={350}
+              className="rounded-t-md w-full h-full object-cover"
+            />
+          </figure>
+
           <div className="px-4 py-4 bg-slate-100 rounded-b-md">
             <h2 className="text-lg font-semibold overflow-hidden line-clamp-2">
               {book.title}

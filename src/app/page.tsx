@@ -1,58 +1,42 @@
 import Image from "next/image";
 import Book from "./components/Book";
 import { getAllBooks } from "./lib/microcms/client";
-import BookType from "./types/types";
-
-// const books = [
-//   {
-//     id: 1,
-//     title: "Book 1",
-//     thumbnail: "/thumbnails/discord-clone-udemy.png",
-//     price: 2980,
-//     author: {
-//       id: 1,
-//       name: "Author 1",
-//       description: "Author 1 description",
-//       profile_icon: "https://source.unsplash.com/random/2",
-//     },
-//     content: "Content 1",
-//     created_at: new Date().toString(),
-//     updated_at: new Date().toString(),
-//   },
-//   {
-//     id: 2,
-//     title: "Book 2",
-//     thumbnail: "/thumbnails/notion-udemy.png",
-//     price: 3980,
-//     author: {
-//       id: 2,
-//       name: "Author 2",
-//       description: "Author 2 description",
-//       profile_icon: "https://source.unsplash.com/random/2",
-//     },
-//     content: "Content 2",
-//     created_at: new Date().toString(),
-//     updated_at: new Date().toString(),
-//   },
-//   {
-//     id: 3,
-//     title: "Book 3",
-//     thumbnail: "/thumbnails/openai-chatapplication-udem.png",
-//     price: 4980,
-//     author: {
-//       id: 3,
-//       name: "Author 3",
-//       description: "Author 3 description",
-//       profile_icon: "https://source.unsplash.com/random/3",
-//     },
-//     content: "Content 3",
-//     created_at: new Date().toString(),
-//     updated_at: new Date().toString(),
-//   },
-// ];
+import { BookType, Purchase, User } from "./types/types";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "./lib/next-auth/options";
 
 export default async function Home() {
+  //microCMSから全書籍情報を取得
   const books = await getAllBooks();
+
+  console.log(books);
+
+  //サーバーサイドでのNext-AUthセッション取得
+  const session = await getServerSession(nextAuthOptions);
+  //セッションからユーザー情報を取得
+  const user = session?.user as User;
+
+  let purchaseBookIds: string[];
+  if (user) {
+    const purchasesData = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/purchases/${user.id}`,
+      { cache: "no-store" } //SSR
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        return response.json();
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    // const purchasesData = await response.json();
+
+    purchaseBookIds = purchasesData.map((item: Purchase) => {
+      return item.bookId;
+    });
+  }
 
   return (
     <>
@@ -62,7 +46,13 @@ export default async function Home() {
         </h2>
         <div className="max-w-screen-xl w-11/12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {books.map((book: BookType) => {
-            return <Book key={book.id} book={book} />;
+            return (
+              <Book
+                key={book.id}
+                book={book}
+                isPurchased={purchaseBookIds?.includes(book.id)}
+              />
+            );
           })}
         </div>
       </main>
