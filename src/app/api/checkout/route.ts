@@ -29,8 +29,8 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       ],
       mode: "payment",
-      success_url: `${process.env.NEXT_AUTH_URL}/book/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_AUTH_URL}`,
+      success_url: `https://book-commerce-app-sepia-theta.vercel.app/book/checkout-success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `https://book-commerce-app-sepia-theta.vercel.app`,
     });
     //作成したチェックアウトセッションのurlを返す
     return NextResponse.json({
