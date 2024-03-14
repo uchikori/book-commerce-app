@@ -13,6 +13,9 @@ export const getAllBooks = async () => {
       offset: 0,
       limit: 10,
     },
+    customRequestInit: {
+      cache: "no-store",
+    },
   });
   return allBooks.contents;
 };
@@ -21,6 +24,9 @@ export const getDetailBook = async (bookId: string) => {
   const detailBook = await client.get({
     endpoint: "bookcommerce",
     contentId: bookId,
+    customRequestInit: {
+      cache: "no-store",
+    },
   });
   return detailBook;
 };
