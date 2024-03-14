@@ -101,7 +101,7 @@ const Book = (props: BookProps) => {
       <div className="flex flex-col items-center m-4">
         <a
           onClick={handlePurchaseClick}
-          className="cursor-pointer shadow-2xl duration-300 hover:translate-y-1 hover:shadow-none"
+          className="w-full cursor-pointer shadow-2xl duration-300 hover:translate-y-1 hover:shadow-none"
         >
           <figure className="aspect-[16/9]">
             <Image
