@@ -8,7 +8,6 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 export async function POST(req: NextRequest, res: NextResponse) {
   //titleとpriceをリクエストボディから受け取る
   const { title, price, bookId, userId } = await req.json();
-  console.log(title, price, bookId, userId);
 
   try {
     //stripeのチェックアウトセッションを作成

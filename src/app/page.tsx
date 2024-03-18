@@ -9,8 +9,6 @@ export default async function Home() {
   //microCMSから全書籍情報を取得
   const books = await getAllBooks();
 
-  console.log(books);
-
   //サーバーサイドでのNext-AUthセッション取得
   const session = await getServerSession(nextAuthOptions);
   //セッションからユーザー情報を取得
@@ -51,6 +49,7 @@ export default async function Home() {
                 key={book.id}
                 book={book}
                 isPurchased={purchaseBookIds?.includes(book.id)}
+                user={user}
               />
             );
           })}

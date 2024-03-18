@@ -1,6 +1,6 @@
 "use client";
 
-import { BookType } from "@/app/types/types";
+import { BookType, User } from "@/app/types/types";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,17 +10,18 @@ import { useState } from "react";
 type BookProps = {
   book: BookType;
   isPurchased: boolean;
+  user: User;
 };
 
 const Book = (props: BookProps) => {
-  const { book, isPurchased } = props;
+  const { book, isPurchased, user } = props;
 
   const router = useRouter();
 
-  //セッションの取得(データオブジェクトをsessionとして受け取る)
-  const { data: session } = useSession();
-  //セッションオブジェクトが存在する場合のみuserを取得
-  const user: any = session?.user;
+  // //セッションの取得(データオブジェクトをsessionとして受け取る)
+  // const { data: session } = useSession();
+  // //セッションオブジェクトが存在する場合のみuserを取得
+  // const user: any = session?.user;
 
   //モーダル開閉の状態変数
   const [showModal, setShowModal] = useState(false);
