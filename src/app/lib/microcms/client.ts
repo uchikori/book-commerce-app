@@ -14,7 +14,10 @@ export const getAllBooks = async () => {
       limit: 10,
     },
     customRequestInit: {
-      cache: "no-store",
+      // cache: "no-store",
+      next: {
+        revalidate: 60,
+      },
     },
   });
   return allBooks.contents;
